@@ -1,4 +1,0 @@
-##gff-version 3
-# test1 Length: 126
-# test1 Number of predicted TMRs: 0
-test1	DeepTMHMM	inside	1	126				
