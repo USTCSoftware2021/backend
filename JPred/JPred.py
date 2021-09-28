@@ -19,6 +19,7 @@ class JPred:
             mode="msa", user_format="fasta", seq=fasta_str, silent=True)
         jobid = re.search(
             r'"http://www.compbio.dundee.ac.uk/jpred4/cgi-bin/chklog\?(.*?)"', res.text).groups()[0]
+        self.wait_result(jobid)
         return requests.get(self.SVG_URL % (jobid, jobid)).text
 
     @retry(wait_fixed=5000, stop_max_attempt_number=5)

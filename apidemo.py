@@ -11,9 +11,9 @@ from hashlib import md5
 
 app = Flask(__name__)
 
-@app.route("/api")
-def hello_world():
-    return json.dumps([md5(str(glob.count).encode()).hexdigest()])
+@app.route("/api", )
+def api():
+    return json.dumps([md5(str().encode()).hexdigest()])
 
 
 # @app.route("/random")
