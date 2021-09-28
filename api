@@ -1,0 +1,14 @@
+server {
+	listen 80;
+	server_name koishi.me;
+	
+	root /var/www/USTC2021-frontend;
+	location /api {
+		include proxy_params;
+		proxy_pass http://unix:/var/www/backend/api.sock;
+	}
+	location / {
+		try_files $uri $uri/ =404;
+	}
+		
+}
