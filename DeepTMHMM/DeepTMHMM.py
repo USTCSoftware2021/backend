@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import json
-from BioLibPatch import BioLibPatch
+from .BioLibPatch import BioLibPatch
 
 class DeepTMHMM:
     def get_result(self, fasta_str: str):
