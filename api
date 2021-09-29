@@ -5,7 +5,7 @@ server {
 	root /var/www/USTC2021-frontend;
 	location /api {
 		include proxy_params;
-		proxy_pass http://unix:/var/www/backend/api.sock;
+		proxy_pass http://unix:/tmp/api.sock;
 	}
 	location / {
 		try_files $uri $uri/ =404;
