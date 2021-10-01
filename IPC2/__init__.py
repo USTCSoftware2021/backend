@@ -1,0 +1,1 @@
+from .ipc2_predict import IPC2

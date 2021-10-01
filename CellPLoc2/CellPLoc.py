@@ -1,5 +1,4 @@
 # ToDo: 异步化方法
-import json
 import requests
 from requests_toolbelt import MultipartEncoder
 import re
@@ -12,15 +11,15 @@ class QueryError(Exception):
 class CellPloc:
     def __init__(self):
         self.ploc_urls = {
-            "Euk-mPLoc2.0": "http://www.csbio.sjtu.edu.cn/cgi-bin/EukmPLoc2.cgi",
-            "Hum-mPLoc2.0": "http://www.csbio.sjtu.edu.cn/cgi-bin/HummPLoc2.cgi",
-            "Plant-mPLoc": "http://www.csbio.sjtu.edu.cn/cgi-bin/PlantmPLoc.cgi",
-            "Gpos-mPLoc": "http://www.csbio.sjtu.edu.cn/cgi-bin/GposmPLoc.cgi",
-            "Gneg-mPLoc": "http://www.csbio.sjtu.edu.cn/cgi-bin/GnegmPLoc.cgi",
-            "Virus-mPLoc": "http://www.csbio.sjtu.edu.cn/cgi-bin/VirusmPLoc.cgi",
+            "euk": "http://www.csbio.sjtu.edu.cn/cgi-bin/EukmPLoc2.cgi",
+            "hum": "http://www.csbio.sjtu.edu.cn/cgi-bin/HummPLoc2.cgi",
+            "plant": "http://www.csbio.sjtu.edu.cn/cgi-bin/PlantmPLoc.cgi",
+            "gpos": "http://www.csbio.sjtu.edu.cn/cgi-bin/GposmPLoc.cgi",
+            "gneg": "http://www.csbio.sjtu.edu.cn/cgi-bin/GnegmPLoc.cgi",
+            "virus": "http://www.csbio.sjtu.edu.cn/cgi-bin/VirusmPLoc.cgi",
         }
 
-    def get_result(self, ploc_type: str, fasta_str: str):
+    def get_result(self, fasta_str: str, ploc_type: str):
         form = MultipartEncoder({
             "mode": "string",
             "S1": fasta_str,
@@ -32,8 +31,8 @@ class CellPloc:
             raise QueryError
         return re.search("<font size=4pt color='#5712A3'>(.*?)</font>", res.content.decode()).groups()[0]
 
-    def get_result_json(self, ploc_type: str, fasta_str: str):
-        return json.dumps([{"Predicted Location(s)": self.get_result(ploc_type, fasta_str)}])
+    def get_result_dict(self, fasta_str: str, ploc_type: str):
+        return {ploc_type: self.get_result(fasta_str, ploc_type)}
 
 
 if __name__ == '__main__':
@@ -41,4 +40,4 @@ if __name__ == '__main__':
 MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPMKMRFFSSPCGKAAVDPADRCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
     cell_ploc = CellPloc()
     for i in cell_ploc.ploc_urls.keys():
-        print(cell_ploc.get_result_json(i, test_fasta))
+        print(cell_ploc.get_result_dict(test_fasta, i))

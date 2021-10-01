@@ -1,5 +1,4 @@
 import re
-import json
 import jpredapi
 import requests
 from retrying import retry
@@ -29,12 +28,12 @@ class JPred:
             raise UnfinishedError
         return res
 
-    def get_result_json(self, fasta_str: str):
-        return json.dumps([{"svg": self.get_result(fasta_str)}])
+    def get_result_dict(self, fasta_str: str):
+        return {"svg": self.get_result(fasta_str)}
 
 
 if __name__ == '__main__':
-    test1_str = """>test1
+    test_str = """>test1
 MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPMKMRFFSSPCGKAAVDPADRCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
     jpred = JPred()
-    print(jpred.get_result_json(test1_str))
+    print(jpred.get_result_dict(test_str))

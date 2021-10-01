@@ -5,9 +5,6 @@ import os
 from os import path
 from random import choice
 from hashlib import md5
-from CellPLoc2 import CellPloc
-from DeepTMHMM import DeepTMHMM
-from JPred import JPred
 import logging
 
 app = Flask(__name__)
