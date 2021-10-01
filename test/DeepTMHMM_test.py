@@ -1,0 +1,10 @@
+#!python
+import sys
+sys.path.append("..")
+
+import DeepTMHMM
+
+test_sequence = """MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPMKMRFFSSPCGKAAVDPAD\
+RCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
+
+print(DeepTMHMM.get_result_dict(test_sequence))

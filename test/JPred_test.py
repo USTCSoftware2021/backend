@@ -1,0 +1,10 @@
+#!python
+import sys
+sys.path.append("..")
+
+import JPred
+
+test_fasta = """MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPMKMRFFSSPCGKAAVDPAD\
+RCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
+
+print(JPred.get_result_dict(test_fasta))

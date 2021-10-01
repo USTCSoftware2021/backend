@@ -1,1 +1,1 @@
-from .ipc2_predict import IPC2
+from .IPC2 import get_result_dict

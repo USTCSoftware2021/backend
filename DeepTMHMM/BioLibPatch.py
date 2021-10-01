@@ -8,8 +8,8 @@ from biolib.biolib_errors import BioLibError
 
 
 class BioLibPatch(BioLibApp):
-    def __call__(self, fasta_str=None):
-        module_input_serialized = self._get_serialized_module_input(fasta_str)
+    def __call__(self, sequence_str=None):
+        module_input_serialized = self._get_serialized_module_input(sequence_str)
 
         job = BiolibJobApi.create(self._selected_app_version['public_id'])
         BiolibJobApi.update_state(job['public_id'], JobState.IN_PROGRESS.value)
@@ -38,8 +38,8 @@ class BioLibPatch(BioLibApp):
             raise exception
 
     @staticmethod
-    def _get_serialized_module_input(fasta_str: str) -> bytes:
-        files_dict = {"/input.fasta": fasta_str.encode()}
+    def _get_serialized_module_input(sequence_str: str) -> bytes:
+        files_dict = {"/input.sequence": sequence_str.encode()}
         module_input_serialized: bytes = ModuleInput().serialize(
-            stdin="", arguments=["--fasta", "input.fasta"], files=files_dict)
+            stdin="", arguments=["--sequence", "input.sequence"], files=files_dict)
         return module_input_serialized

@@ -14,6 +14,7 @@ def api():
     req = request.get_json()
     return json.dumps([md5(req["sequence"].encode()).hexdigest()])
 
+@app.route("/api/")
 
 # @app.route("/random")
 # def random():
@@ -35,7 +36,6 @@ if __name__ == "__main__":
     app.run("0.0.0.0", 6002)
 
 if __name__ != '__main__':
-    # 如果不是直接运行，则将日志输出到 gunicorn 中
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)

@@ -1,18 +1,23 @@
 #! /usr/bin/python3
 
 from .BioLibPatch import BioLibPatch
+from redis import Redis
 
-class DeepTMHMM:
-    def get_result(self, fasta_str: str):
-        model = BioLibPatch("DTU/DeepTMHMM")
-        return model(fasta_str)
+redis = Redis("localhost", port=6379, db=5)
 
-    def get_result_dict(self, fasta_str: str):
-        return self.get_result(fasta_str)
+
+def get_result(sequence_str: str):
+    sequence_str = ">sample\n" + sequence_str
+    model = BioLibPatch("DTU/DeepTMHMM")
+    return model(sequence_str)
+
+
+def get_result_dict(sequence_str: str):
+    # stringnify to pass through json encoder
+    return str(get_result(sequence_str))
 
 
 if __name__ == '__main__':
-    test_str = """>test1
-MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPMKMRFFSSPCGKAAVDPADRCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
-    deeptmhmm = DeepTMHMM()
-    print(deeptmhmm.get_result(test_str))
+    test_sequence = """MKMRFFSSPCGKAAVDPADRCKEDQHPMKMRFFSSPCGKAAVDPADRCKEV\n
+QQIRDQHPMKMRFFSSPCGKAAVDPADRCKEVQQKMRFFSSPCGKAADRCKEVQQIRDQHPEDQHPMKMRFFSSP"""
+    print(get_result(test_sequence))
