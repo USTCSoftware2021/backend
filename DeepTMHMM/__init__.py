@@ -1,1 +1,1 @@
-from .DeepTMHMM import get_result_dict
+from .DeepTMHMM import *

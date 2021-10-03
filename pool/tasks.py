@@ -1,29 +1,54 @@
-from pool import app
-from CellPLoc import CellPloc
-from DeepTMHMM import DeepTMHMM
-from JPred import JPred
-from IPC2 import IPC2
+from pool import app, hash_redis
+import CellPLoc
+import DeepTMHMM
+import JPred
+import IPC2
 
-
-cellPloc = CellPloc()
-deepTMHMM = DeepTMHMM()
-jPred = JPred()
-iPC2 = IPC2()
 
 @app.task
-def get_CellPloc(sequence_str, ploc_type):
-    return cellPloc.get_result_dict(sequence_str, ploc_type)
+def get_CellPLoc(md5_hash):
+    try:
+        result = dict()
+        for ploc_type in CellPLoc.ploc_urls.keys():
+            result[ploc_type] = CellPLoc.get_result(hash_redis.get(md5_hash), ploc_type)
+        result["status"] = "Success"
+        CellPLoc.redis.set(md5_hash, str(result))
+        return True
+    except:
+        CellPLoc.redis.set(md5_hash, str({"status": "Failed"}))
+        return False
 
 @app.task
-def get_DeepTMHMM(sequence_str):
-    return deepTMHMM.get_result_dict(sequence_str)
+def get_DeepTMHMM(md5_hash):
+    try:
+        result = DeepTMHMM.get_result_dict(hash_redis.get(md5_hash))
+        result["status"] = "Success"
+        DeepTMHMM.redis.set(md5_hash, str(result))
+        return True
+    except:
+        DeepTMHMM.redis.set(md5_hash, str({"status": "Failed"}))
+        return False
 
 @app.task
-def get_JPred(sequence_str):
-    return jPred.get_result_dict(sequence_str)
+def get_JPred(md5_hash):
+    try:
+        result = JPred.get_result_dict(hash_redis.get(md5_hash))
+        result["status"] = "Success"
+        JPred.redis.set(md5_hash, str(result))
+        return True
+    except:
+        JPred.redis.set(md5_hash, str({"status": "Failed"}))
+    return False
 
 @app.task
-def get_IPC2(sequence_str, ipc2_type):
-    return iPC2.get_result_dict(sequence_str, ipc2_type)
-
-def task_process
+def get_IPC2(md5_hash):
+    try:
+        result = dict()
+        for ipc2_type in ["peptide", "protein"]:
+            result[ipc2_type] = IPC2.get_result_dict(hash_redis.get(md5_hash), ipc2_type)
+        result["status"] = "Success"
+        IPC2.redis.set(md5_hash, str(result))
+        return True
+    except:
+        IPC2.redis.set(md5_hash, str({"status": "Failed"}))
+        return False

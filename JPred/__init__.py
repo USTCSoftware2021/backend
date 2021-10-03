@@ -1,1 +1,1 @@
-from .JPred import get_result_dict
+from .JPred import *

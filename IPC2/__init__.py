@@ -1,1 +1,1 @@
-from .IPC2 import get_result_dict
+from .IPC2 import *

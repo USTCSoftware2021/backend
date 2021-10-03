@@ -13,8 +13,7 @@ def get_result(sequence_str: str):
 
 
 def get_result_dict(sequence_str: str):
-    # stringnify to pass through json encoder
-    return str(get_result(sequence_str))
+    return get_result(sequence_str)
 
 
 if __name__ == '__main__':
