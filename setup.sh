@@ -8,4 +8,4 @@ pip install -U pip
 pip install -U setuptools
 pip install setuptools_scm
 pip install wheel
-pip install pybiolib requests requests_toolbelt flask gunicorn jpredapi
+pip install pybiolib requests requests_toolbelt flask gunicorn jpredapi scikit-learn==0.24.1 redis celery
