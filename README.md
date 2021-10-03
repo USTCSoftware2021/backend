@@ -8,7 +8,8 @@
 4. `ln -s /etc/nginx/sites-avaliable/api /etc/nginx/sites-enabled/api`
 5. `rm /etc/nginx/sites-enabled/default`
 6. `service nginx start` (or restart)
-7. cd repo dir & run setup.sh in repo
+7. cd repo dir & run setup.sh in repo, which will create apienv first and install needed package 
+(please add to package list if some package missing)
 8. `source apienv/bin/activate`
 9. `gunicorn --workers 3 --bind unix:/tmp/api.sock -m 007 wsgi:app`
 10. for sake of privilige, `chmod 777 /tmp/api.sock` (DO NOT EXECUTE IN PRODUCTION ENVIRONMENT)
