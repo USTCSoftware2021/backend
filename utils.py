@@ -8,15 +8,15 @@ class TaskInvalidError(Exception):
     pass
 
 
-def task_submit(task: str, *args):
+def task_submit(task: str, md5_hash: str, *args):
     if task == "CellPLoc":
-        tasks.get_CellPLoc.apply_async([task])
+        tasks.get_CellPLoc.apply_async([md5_hash])
     elif task == "DeepTMHMM":
-        tasks.get_DeepTMHMM.apply_async([task])
+        tasks.get_DeepTMHMM.apply_async([md5_hash])
     elif task == "JPred":
-        tasks.get_IPC2.apply_async([task])
+        tasks.get_JPred.apply_async([md5_hash])
     elif task == "IPC2":
-        tasks.get_JPred.apply_async([task])
+        tasks.get_IPC2.apply_async([md5_hash])
     else:
         raise TaskInvalidError
 

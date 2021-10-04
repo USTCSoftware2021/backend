@@ -3,7 +3,9 @@ python3 -m venv apienv
 if ! [ -e apienv/bin/activate ]; then
 	exit 1
 fi
+
 source apienv/bin/activate
+
 pip install -U pip
 pip install -U setuptools
 pip install setuptools_scm

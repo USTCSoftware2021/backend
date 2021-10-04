@@ -15,17 +15,17 @@ def api():
     try:
         req = request.get_json()
         if check(req["sequence"]):
-            md5_hex = md5(req["sequence"].encode()).hexdigest()
-            hash_redis.set(md5_hex, req["sequence"])
+            md5_hash = md5(req["sequence"].encode()).hexdigest()
+            hash_redis.set(md5_hash, req["sequence"])
             
             for task in req["tasks"]:
                 if type(req["tasks"][task]) == dict:
-                    task_submit(task, **req["tasks"][task])
+                    task_submit(task, md5_hash, **req["tasks"][task])
                 elif req["tasks"][task] == True:
-                    task_submit(task)
-                get_db_from_task(task).set(md5_hex, json.dumps({"status": "Running"}))
+                    task_submit(task, md5_hash)
+                get_db_from_task(task).set(md5_hash, json.dumps({"status": "Running"}))
 
-            return json.dumps({"hash": md5_hex})
+            return json.dumps({"hash": md5_hash})
     except Exception as e:
         raise e
         # return json.dumps({"status": str(e)})
@@ -35,12 +35,14 @@ def api():
 def get_task_info(md5_hash, task):
     if hash_redis.get(md5_hash):
         result = get_db_from_task(task).get(md5_hash)
-        if task == "DeepTMHMM":
-            result = eval(result)
+        result = eval(result)
+        if task == "DeepTMHMM" and result["status"] != "finished":
             del result["/plot.png"]
+            result["/TMRs.gff3"] = result["/TMRs.gff3"].decode()
+            result["/predicted_topologies.3line"] = result["/predicted_topologies.3line"].decode()
             return json.dumps(result)
         if result != None:
-            return json.dumps(eval(result))
+            return json.dumps(result)
         else:
             return json.dumps({"status": "NotRequested"})
     else:
@@ -49,7 +51,7 @@ def get_task_info(md5_hash, task):
 @app.route("/api/<md5_hash>/DeepTMHMM/plot.png", methods=["get"])
 def get_plot(md5_hash):
     if hash_redis.get(md5_hash):
-        result = get_db_from_task("DeepTMHMM").get(md5_hash)
+        result = eval(get_db_from_task("DeepTMHMM").get(md5_hash))
         return send_file(BytesIO(result["/plot.png"]), mimetype="image/png", as_attachment=False, attachment_filename="plot.png")
     else:
         return json.dumps({"status": "NoSuchSequence"}) 
