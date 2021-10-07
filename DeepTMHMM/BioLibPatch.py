@@ -39,7 +39,7 @@ class BioLibPatch(BioLibApp):
 
     @staticmethod
     def _get_serialized_module_input(sequence_str: str) -> bytes:
-        files_dict = {"/input.sequence": sequence_str.encode()}
+        files_dict = {"/input.fasta": sequence_str.encode()}
         module_input_serialized: bytes = ModuleInput().serialize(
-            stdin="", arguments=["--sequence", "input.sequence"], files=files_dict)
+            stdin="", arguments=["--fasta", "input.fasta"], files=files_dict)
         return module_input_serialized

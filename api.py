@@ -19,11 +19,13 @@ def api():
             hash_redis.set(md5_hash, req["sequence"])
             
             for task in req["tasks"]:
-                if type(req["tasks"][task]) == dict:
-                    task_submit(task, md5_hash, **req["tasks"][task])
-                elif req["tasks"][task] == True:
-                    task_submit(task, md5_hash)
-                get_db_from_task(task).set(md5_hash, json.dumps({"status": "Running"}))
+                db = get_db_from_task(task)
+                if not db.get(md5_hash) or eval(db.get(md5_hash))["status"] == "Failed":
+                    if type(req["tasks"][task]) == dict:
+                        task_submit(task, md5_hash, **req["tasks"][task])
+                    elif req["tasks"][task] == True:
+                        task_submit(task, md5_hash)
+                    db.set(md5_hash, json.dumps({"status": "Running"}))
 
             return json.dumps({"hash": md5_hash})
     except Exception as e:
@@ -36,7 +38,7 @@ def get_task_info(md5_hash, task):
     if hash_redis.get(md5_hash):
         result = get_db_from_task(task).get(md5_hash)
         result = eval(result)
-        if task == "DeepTMHMM" and result["status"] != "finished":
+        if task == "DeepTMHMM" and result["status"] == "Success":
             del result["/plot.png"]
             result["/TMRs.gff3"] = result["/TMRs.gff3"].decode()
             result["/predicted_topologies.3line"] = result["/predicted_topologies.3line"].decode()
@@ -52,7 +54,10 @@ def get_task_info(md5_hash, task):
 def get_plot(md5_hash):
     if hash_redis.get(md5_hash):
         result = eval(get_db_from_task("DeepTMHMM").get(md5_hash))
-        return send_file(BytesIO(result["/plot.png"]), mimetype="image/png", as_attachment=False, attachment_filename="plot.png")
+        if (result["status"] == "Success"):
+            return send_file(BytesIO(result["/plot.png"]), mimetype="image/png", as_attachment=False, attachment_filename="plot.png")
+        else:
+            return json.dumps({"status": result["status"]})
     else:
         return json.dumps({"status": "NoSuchSequence"}) 
 
