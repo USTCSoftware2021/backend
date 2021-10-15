@@ -4,11 +4,14 @@ import json
 from hashlib import md5
 import logging
 from utils import hash_redis, get_db_from_task, task_submit
+import re
 
 app = Flask(__name__)
 
+sequence_checker = re.compile("^[ACDEFGHIKLMNPQRSTUVWY\s]+$")
+
 def check(seq):
-    return True
+    return sequence_checker.match(seq)
 
 @app.route("/api", methods=["POST"])
 def api():
