@@ -19,11 +19,11 @@ pip install -r requirements.txt
 echo "2. Move required nginx and systemd config files, assuming that systemd is used as init process"
 echo "> Note: the config differs from our deployment for https config is exclusive to specific site"
 
-cp ./serve_config/cat /etc/nginx/sites-avaliable/cat
+cp ./serve_config/cat /etc/nginx/sites-available/cat
 if [ -L /etc/nginx/sites-enabled/cat ]; then
         rm /etc/nginx/sites-enabled/cat
 fi
-ln -s /etc/nginx/sites-avaliable/cat /etc/nginx/sites-enabled/cat
+ln -s /etc/nginx/sites-available/cat /etc/nginx/sites-enabled/cat
 if [ -e /etc/nginx/sites-enabled/default ]; then
         rm /etc/nginx/sites-enabled/default
 fi
