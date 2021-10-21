@@ -21,7 +21,9 @@ echo "> Note: the config differs from our deployment for https config is exclusi
 
 cp ./serve_config/cat /etc/nginx/sites-avaliable
 ln -s /etc/nginx/sites-avaliable/cat /etc/nginx/sites-enabled/cat
-rm /etc/nginx/sites-enabled/default
+if [ -e /etc/nginx/sites-enabled/default ]; then
+	rm /etc/nginx/sites-enabled/default
+fi
 
 cp ./serve_config/*.service /etc/systemd/system
 systemctl daemon-reload
