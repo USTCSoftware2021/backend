@@ -1,0 +1,19 @@
+server {
+	listen 80;
+	server_name koishi.me;
+	
+	root /var/www/USTC2021-frontend;
+	location /api {
+		include proxy_params;
+		proxy_pass http://unix:/tmp/api.sock;
+	}
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	location /IntelRNA {
+		proxy_pass http://47.103.25.116/function/v1/array/;
+	}
+	location = / {		
+		return 302 http://localhost/Profession/profession-index/;
+	}
+}
