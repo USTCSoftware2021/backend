@@ -1,0 +1,13 @@
+[Unit]
+Description=Celery worker for async tasks
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/backend
+Environment="PATH=/var/www/backend/apienv/bin"
+ExecStart=/var/www/backend/apienv/bin/celery -A pool worker -c 12
+
+[Install]
+WantedBy=multi-user.target
